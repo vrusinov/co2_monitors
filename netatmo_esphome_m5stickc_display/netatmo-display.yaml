@@ -8,6 +8,8 @@ esphome:
   board: m5stick-c
   platformio_options:
     upload_speed: 115200
+  includes:
+    - "netatmo_display.h"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -110,17 +112,9 @@ display:
     use_bgr: true
     invert_colors: true
     # https://esphome.io/components/display/index.html
+    # TODO: move the majority of this code to separate source file.
     lambda: |-
-      auto component_value = [](double v, int v_min, int v_range, uint8_t max_color_value, uint8_t min_color_value) {
-        int color_range = max_color_value - min_color_value;
-        if (color_range == 0) {
-          return min_color_value;
-        } else {
-          return uint8_t(min_color_value + color_range * (v - v_min) / v_range);
-        }
-      };
-
-      auto gradient_color = [&component_value](double v, int min, Color min_color, int max, Color max_color) {
+      auto gradient_color = [](double v, int min, Color min_color, int max, Color max_color) {
         if (v <= min) {
           return min_color;
         }

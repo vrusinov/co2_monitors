@@ -1,0 +1,228 @@
+substitutions:
+  devicename: m5stickc
+  upper_devicename: M5StickC
+
+esphome:
+  name: "netatmo-display"
+  platform: ESP32
+  board: m5stick-c
+  platformio_options:
+    upload_speed: 115200
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# Enable logging
+debug:
+
+logger:
+
+# Enable Home Assistant API
+api:
+  password: !secret homeassistant_password
+
+ota:
+  password: !secret homeassistant_password
+
+# Resources:
+font:
+  - file: 'fonts/roboto/Roboto-Regular.ttf'
+    id: large_font
+    size: 36
+
+  - file: 'fonts/roboto/Roboto-Light.ttf'
+    id: font3
+    size: 15
+
+# Sensors
+sensor:
+  - platform: wifi_signal
+    name: ${upper_devicename} WiFi Signal
+    id: wifi_dbm
+  - platform: uptime
+    name: ${upper_devicename} Uptime
+  - platform: homeassistant
+    id: cabinet_co2
+    entity_id: sensor.netatmo_home_living_room_cabinet_co2
+    internal: true
+  - platform: homeassistant
+    id: cabinet_temp
+    entity_id: sensor.netatmo_home_living_room_cabinet_temperature
+    internal: true
+  - platform: homeassistant
+    id: living_room_co2
+    entity_id: sensor.netatmo_home_living_room_co2
+    internal: true
+  - platform: homeassistant
+    id: living_room_temp
+    entity_id: sensor.netatmo_home_living_room_temperature
+    internal: true
+  - platform: homeassistant
+    id: bedroom_co2
+    entity_id: sensor.netatmo_home_living_room_bedroom_co2
+    internal: true
+  - platform: homeassistant
+    id: bedroom_temp
+    entity_id: sensor.netatmo_home_living_room_bedroom_temperature
+    internal: true
+  - platform: homeassistant
+    id: outdoor_temp
+    entity_id: sensor.netatmo_home_living_room_outdoor_temperature
+    internal: true
+
+# internal LED
+light:
+  - platform: monochromatic
+    output:  builtin_led
+    name: ${upper_devicename} Led
+    id: led1
+
+output:
+  - platform: ledc
+    pin: 10
+    inverted: true
+    id: builtin_led
+
+spi:
+  clk_pin: GPIO13
+  mosi_pin: GPIO15
+
+i2c:
+   - id: bus_a
+     sda: GPIO21
+     scl: GPIO22
+     scan: True
+
+# builtin 80x160 TFT
+display:
+  - platform: st7735
+    model: 'INITR_MINI160X80'
+    #model: 'INITR_BLACKTAB'
+    device_width: 80
+    device_height: 160
+    col_start: 0
+    row_start: 0
+    cs_pin: GPIO5
+    dc_pin: GPIO23
+    reset_pin: GPIO18
+    rotation: 270
+    use_bgr: true
+    invert_colors: true
+    # https://esphome.io/components/display/index.html
+    lambda: |-
+      auto component_value = [](double v, int v_min, int v_range, uint8_t max_color_value, uint8_t min_color_value) {
+        int color_range = max_color_value - min_color_value;
+        if (color_range == 0) {
+          return min_color_value;
+        } else {
+          return uint8_t(min_color_value + color_range * (v - v_min) / v_range);
+        }
+      };
+
+      auto gradient_color = [&component_value](double v, int min, Color min_color, int max, Color max_color) {
+        if (v <= min) {
+          return min_color;
+        }
+        if (v >= max) {
+          return max_color;
+        }
+
+        int range = max - min;
+
+        uint8_t red_value = component_value(v, min, range, max_color.red, min_color.red);
+        uint8_t green_value = component_value(v, min, range, max_color.green, min_color.green);
+        uint8_t blue_value = component_value(v, min, range, max_color.blue, min_color.blue);
+
+        return Color(red_value, green_value, blue_value);
+      };
+
+      auto double_gradient = [&gradient_color](double v, int min, Color min_color, int mid, Color mid_color, int max, Color max_color) {
+        if (v <= min) {
+          return min_color;
+        } else if (v <= mid) {
+          return gradient_color(v, min, min_color, mid, mid_color);
+        } else if (v < max) {
+          return gradient_color(v, mid, mid_color, max, max_color);
+        } else {
+          return max_color;
+        }
+      };
+
+      auto color_red = Color(255, 0, 0);
+      auto color_green = Color(0, 255, 0);
+      auto color_blue = Color(0, 0, 255);
+      auto color_white = Color(255, 255, 255);
+
+      // Cabinet ppm - display in the center.
+      if (id(cabinet_co2).has_state()) {
+        int cabinet_ppm = id(cabinet_co2).state;
+        it.printf(it.get_width() / 2,
+                  it.get_height() / 2,
+                  id(large_font),
+                  double_gradient(double(cabinet_ppm), 300, color_green, 700, color_white, 2000, color_red),
+                  TextAlign::CENTER,
+                  "%d",
+                  cabinet_ppm);
+      }
+
+      // averages
+      float avg_temp = 0;
+      int avg_ppm = 0;
+      if (id(cabinet_temp).has_state() &&
+          id(living_room_temp).has_state() &&
+          id(bedroom_temp).has_state()) {
+          avg_temp = (id(cabinet_temp).state +
+                      id(living_room_temp).state +
+                      id(bedroom_temp).state)
+                      / 3;
+      }
+      if (id(cabinet_co2).has_state() &&
+          id(living_room_co2).has_state() &&
+          id(bedroom_co2).has_state()) {
+          avg_ppm = (id(cabinet_co2).state +
+                      id(living_room_co2).state +
+                      id(bedroom_co2).state)
+                    / 3;
+      }
+      if (avg_temp || avg_ppm) {
+        char buf[128] = "In: ";
+        int x_start, y_start;
+        int width, height;
+        auto font = id(font3);
+        //auto h = it.get_height();
+        int h = 0;
+        auto align = TextAlign::TOP_LEFT;
+
+        it.print(0, h, font, align, buf);
+        it.get_text_bounds(0, h, buf, font, align, &x_start, &y_start, &width, &height);
+
+        if (avg_temp) {
+          sprintf(buf, "%.1f°C ", avg_temp);
+          it.print(x_start + width, h, font, double_gradient(avg_temp, 15, color_blue, 23, color_white, 25, color_red), align, buf);
+          it.get_text_bounds(x_start + width, h, buf, font, align, &x_start, &y_start, &width, &height);
+        }
+        if (avg_ppm) {
+          sprintf(buf, "%d ppm", avg_ppm);
+          it.print(x_start + width, h, font, double_gradient(double(avg_ppm), 300, color_green, 700, color_white, 2000, color_red), align, buf);
+          it.get_text_bounds(x_start + width, h, buf, font, align, &x_start, &y_start, &width, &height);
+        }
+      }
+
+      // Outside temperature.
+      if (id(outdoor_temp).has_state()) {
+        int x_start, y_start;
+        int width, height;
+        char buf[128] = "Out: ";
+
+        double t = id(outdoor_temp).state;
+
+        it.print(0, it.get_height(),  id(font3), TextAlign::BOTTOM_LEFT, buf);
+        it.get_text_bounds(0, it.get_height(), buf,  id(font3), TextAlign::BOTTOM_LEFT, &x_start, &y_start, &width, &height);
+
+        it.printf(width, it.get_height(), id(font3), double_gradient(t, -5, color_blue, 15, color_white, 30, color_red), TextAlign::BOTTOM_LEFT, "%.1f°C", t);
+      }
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time

@@ -114,24 +114,7 @@ display:
     # https://esphome.io/components/display/index.html
     # TODO: move the majority of this code to separate source file.
     lambda: |-
-      auto gradient_color = [](double v, int min, Color min_color, int max, Color max_color) {
-        if (v <= min) {
-          return min_color;
-        }
-        if (v >= max) {
-          return max_color;
-        }
-
-        int range = max - min;
-
-        uint8_t red_value = component_value(v, min, range, max_color.red, min_color.red);
-        uint8_t green_value = component_value(v, min, range, max_color.green, min_color.green);
-        uint8_t blue_value = component_value(v, min, range, max_color.blue, min_color.blue);
-
-        return Color(red_value, green_value, blue_value);
-      };
-
-      auto double_gradient = [&gradient_color](double v, int min, Color min_color, int mid, Color mid_color, int max, Color max_color) {
+      auto double_gradient = [](double v, int min, Color min_color, int mid, Color mid_color, int max, Color max_color) {
         if (v <= min) {
           return min_color;
         } else if (v <= mid) {

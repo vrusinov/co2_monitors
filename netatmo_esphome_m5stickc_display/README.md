@@ -11,7 +11,7 @@ graph LR
     end
     subgraph Home
         Netatmo[(Netatmo Weather Station fa:fa-cloud)]
-        HomeAssistant[HomeAssisnant fa:fa-house]
+        HomeAssistant[HomeAssistant fa:fa-house]
         Display[CO2 Display fa:fa-display]
     end
 
@@ -28,11 +28,13 @@ Currently the display assumes there is one weather station with two additional i
 
 ## Usage
 
-1. Set up HomeAssistant and [add Netatmo integration to it](https://www.home-assistant.io/integrations/netatmo/).
+1. Get [M5StickC](https://shop.m5stack.com/products/stick-c). The code may work on other devices but I didn't try. Let me know if there are other devices that work.
 
-2. Create `secrets.yaml` file. Use `secrets_example.yaml` as an example. Make sure to set correct wifi and HomeAssistant passwords.
+2. Set up HomeAssistant and [add Netatmo integration to it](https://www.home-assistant.io/integrations/netatmo/).
 
-3. Compile, upload and run the code: `esphome run netatmo-display.yaml`
+3. Create `secrets.yaml` file. Use `secrets_example.yaml` as an example. Make sure to set correct wifi and HomeAssistant passwords.
+
+4. Compile, upload and run the code: `esphome run netatmo-display.yaml`
 
 # TODO
 

@@ -1,8 +1,8 @@
 ![Netatmo display](netatmo_co2_monitor.jpg)
 
-This is [ESPHome](https://esphome.io/)-based display for [Netatmo weather station](https://www.netatmo.com/en-gb/weather/weatherstation). The primary goal is to display indoors CO2 concerntation in my home office so that I know when to open a window. Or when to close and hopefully save some money on heating.
+This is an [ESPHome](https://esphome.io/)-based display for the [Netatmo weather station](https://www.netatmo.com/en-gb/weather/weatherstation). The primary goal is to display the indoor CO2 concentration in my home office, so that I know when to open a window or when to close it to potentially save money on heating.
 
-The device itself is actually not a CO2 monitor and requires Netatmo as working HomeAssistant.
+The device itself is not a CO2 monitor and requires Netatmo to be working with HomeAssistant.
 
 ```mermaid
 graph LR

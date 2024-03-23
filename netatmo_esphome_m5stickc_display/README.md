@@ -36,6 +36,14 @@ Currently the display assumes there is one weather station with two additional i
 
 4. Compile, upload and run the code: `esphome run netatmo-display.yaml`
 
+# Known issues
+
+## Not starting after fully discharged
+
+After flashing via ESPHome M5StickC may not be able to restart after fully discharged.
+
+Workaround is to flash one of the examples using M5burner. See https://docs.m5stack.com/en/quick_start/m5core/uiflow - just flash one of the examples to revive M5StickC and then re-flash using esphome as above.
+
 # TODO
 
 * Make sensor names and their counts configurable.

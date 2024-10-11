@@ -12,3 +12,8 @@ repos:
     rev: 'v18.1.2'
     hooks:
     -   id: clang-format
+- repo: https://github.com/fsfe/reuse-tool
+  rev: "v4.0.3"
+  hooks:
+    # TODO: switch to reuse-lint-file
+    - id: reuse

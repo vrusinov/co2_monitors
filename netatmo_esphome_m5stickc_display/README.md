@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2024 Vladimir Rusinov
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ![Netatmo display](netatmo_co2_monitor.jpg)
 
 This is an [ESPHome](https://esphome.io/)-based display for the [Netatmo weather station](https://www.netatmo.com/en-gb/weather/weatherstation). The primary goal is to display the indoor CO2 concentration in my home office, so that I know when to open a window or when to close it to potentially save money on heating.

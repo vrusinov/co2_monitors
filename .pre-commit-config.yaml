@@ -37,3 +37,7 @@ repos:
     rev: v0.44.0
     hooks:
       - id: markdownlint
+  - repo: https://github.com/amperser/proselint
+    rev: "0.14.0"
+    hooks:
+      - id: proselint

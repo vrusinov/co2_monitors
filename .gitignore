@@ -5,7 +5,6 @@
 */secrets.yaml
 .vscode/
 
-# Nix
-result
-result-*
+# Nix build outputs
+/result*
 .direnv

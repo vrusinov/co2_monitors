@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 Vladimir Rusinov
+# SPDX-License-Identifier: Apache-2.0
+
+version = 1
+
+[[annotations]]
+path = "flake.lock"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Vladimir Rusinov"
+SPDX-License-Identifier = "Apache-2.0"

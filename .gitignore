@@ -4,3 +4,8 @@
 
 */secrets.yaml
 .vscode/
+
+# Nix
+result
+result-*
+.direnv

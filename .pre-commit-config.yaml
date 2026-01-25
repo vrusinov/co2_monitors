@@ -3,18 +3,18 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: 'v20.1.0'
+    rev: 'v21.1.8'
     hooks:
       - id: clang-format
   - repo: https://github.com/fsfe/reuse-tool
-    rev: "v5.0.2"
+    rev: "v6.2.0"
     hooks:
       - id: reuse-lint-file
   - repo: https://github.com/crate-ci/typos
@@ -22,11 +22,11 @@ repos:
     hooks:
       - id: typos
   - repo: https://github.com/cpplint/cpplint
-    rev: "2.0.0"
+    rev: "2.0.2"
     hooks:
       - id: cpplint
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.36.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
   - repo: https://github.com/markdownlint/markdownlint.git
@@ -36,8 +36,9 @@ repos:
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.44.0
     hooks:
-      - id: markdownlint
+      - id: markdownlint-fix
   - repo: https://github.com/amperser/proselint
     rev: "0.14.0"
     hooks:
       - id: proselint
+        exclude: \.gitignore

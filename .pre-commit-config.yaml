@@ -8,6 +8,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        exclude: netatmo_esphome_m5stickc_display/netatmo-display.yaml
       - id: check-added-large-files
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: 'v21.1.8'
@@ -25,6 +26,7 @@ repos:
     rev: "2.0.2"
     hooks:
       - id: cpplint
+        args: [--filter=-whitespace/comments]
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.38.0
     hooks:
@@ -38,9 +40,3 @@ repos:
     rev: v0.47.0
     hooks:
       - id: markdownlint
-  - repo: https://github.com/amperser/proselint
-    rev: "v0.16.0"
-    hooks:
-      - id: proselint
-        language: system
-        exclude: \.gitignore

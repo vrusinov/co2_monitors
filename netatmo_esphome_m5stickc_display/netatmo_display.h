@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2024 Vladimir Rusinov
+// SPDX-FileCopyrightText: 2024-2026 Vladimir Rusinov
 // SPDX-License-Identifier: Apache-2.0
 
 #ifndef NETATMO_ESPHOME_M5STICKC_DISPLAY_NETATMO_DISPLAY_H_
@@ -6,7 +6,7 @@
 
 #include <cstdio>
 
-#include "esphome.h" // NOLINT(build/include_subdir)
+#include "esphome.h"
 
 uint8_t component_value(double v, int v_min, int v_range,
                         uint8_t max_color_value, uint8_t min_color_value) {

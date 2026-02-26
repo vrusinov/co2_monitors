@@ -11,7 +11,7 @@ repos:
         exclude: netatmo_esphome_m5stickc_display/netatmo-display.yaml
       - id: check-added-large-files
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: 'v21.1.8'
+    rev: 'v22.1.0'
     hooks:
       - id: clang-format
   - repo: https://github.com/fsfe/reuse-tool

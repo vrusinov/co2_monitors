@@ -11,7 +11,7 @@ repos:
         exclude: netatmo_esphome_m5stickc_display/netatmo-display.yaml
       - id: check-added-large-files
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: 'v22.1.0'
+    rev: 'v22.1.5'
     hooks:
       - id: clang-format
   - repo: https://github.com/fsfe/reuse-tool
@@ -37,6 +37,6 @@ repos:
       - id: markdownlint
         language_version: default
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.47.0
+    rev: v0.48.0
     hooks:
       - id: markdownlint
